@@ -42,9 +42,11 @@ class SNLIActivator:
                 collate_fn=train_dataset.collate_fn,
                 shuffle=True
             )
-            self._train_validation_loader = Subset(
-                train_dataset,
-                list(set(random.sample(range(1, len(train_dataset)), int(0.22 * len(train_dataset)))))
+            self._train_validation_loader = DataLoader(
+                Subset(train_dataset,
+                       list(set(random.sample(range(1, len(train_dataset)), int(0.11 * len(train_dataset)))))),
+                batch_size=self._batch_size,
+                collate_fn=train_dataset.collate_fn,
             )
         # set validation loader
         if dev_dataset is not None:
