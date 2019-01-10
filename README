@@ -1,0 +1,47 @@
+
+IMPORTANT FOLDERS:
+Report:
+    this folder
+    - report.pdf        our report describing our work
+    - nohup.out         this the output of the training process
+    - test_model.pred   this is the prediction for  "snli_1.0_test.txt"
+
+run:
+    this folder contain two files
+    - train_new_model.py            program to train new model
+    - pred_with_existing_model.py   a program to test a snli-data-file using a trained model
+
+
+BEFORE RUNNING:
+    the article we implemented, use a GloVe 300 dim embedding vectors
+    moreover its model contains 12M variables thus we couldn't upload our trained model (not even to a Git-repository)
+
+    download
+        - SNLI data-set :: https://nlp.stanford.edu/projects/snli/snli_1.0.zip
+        - Glove vectors :: http://nlp.stanford.edu/data/glove.6B.zip            (use "glove.6B.300d.txt" file)
+
+
+TRAINING A NEW MODEL
+    go to run folder and run the following commands
+        - python train_new_model.py   MODEL_NAME    PRE_TRAINED_SRC     TRAIN_SRC      DEV_SRC
+        e.g.
+        - python train_new_model.py   my-model    glove.6B.300d.txt     snli_1.0_train.txt      snli_1.0_dev.txt
+
+        after running this command the training process will begin, a trained model pickle called
+        MODEL_NAME.trained_model will be saved under pkl directory
+
+
+PREDICTING USING AN EXISTING MODEL
+    go to run folder and run the following commands
+        - python pred_with_existing_model.py MODEL_NAME TEST_SRC
+    e.g.
+        - python pred_with_existing_model.py   my-model    snli_1.0_test.txt
+
+    the program will create 2 files
+    - prediction file
+    - loss and accuracy files
+
+    NOTE - the model file must stay in the pkl folder
+
+the program runs over the GPU, this parameter and all other parameters can be tuned from utils/params.py file
+

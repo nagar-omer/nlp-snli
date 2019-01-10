@@ -8,12 +8,15 @@ class TopLayerModel(Module):
     def __init__(self, params: TopLayerParams):
         super(TopLayerModel, self).__init__()
         # useful info in forward function
-        self._layer1 = Linear(params.LINEAR_in_dim, params.LINEAR_hidden_dim)
-        self._output_layer = Linear(params.LINEAR_hidden_dim, params.LINEAR_out_dim)
+        self._layer0 = Linear(params.LINEAR_in_dim, params.LINEAR_hidden_dim_0)
+        self._layer1 = Linear(params.LINEAR_hidden_dim_0, params.LINEAR_hidden_dim_1)
+        self._output_layer = Linear(params.LINEAR_hidden_dim_1, params.LINEAR_out_dim)
         self._activation = params.Activation
 
     def forward(self, premise, hypothesis):
         x = torch.cat([premise, hypothesis, (premise - hypothesis), (premise * hypothesis)], dim=1)
+        x = self._layer0(x)
+        x = self._activation(x)
         x = self._layer1(x)
         x = self._activation(x)
         x = self._output_layer(x)

@@ -1,5 +1,5 @@
 import sys
-
+sys.path.insert(0, "..")
 from utils.data_loader import SNLIDataset
 from utils.snli_model_activator import SNLIActivator
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     args = sys.argv
 
     # TODO DELETE
-    args = ["", "test_model", os.path.join("..", TRAIN_SRC)]
+    # args = ["", "test_model", os.path.join("..", TRAIN_SRC)]
 
     model_name_ = args[1]
     test_src_ = args[2]

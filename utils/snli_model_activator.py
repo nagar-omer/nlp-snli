@@ -44,9 +44,10 @@ class SNLIActivator:
             )
             self._train_validation_loader = DataLoader(
                 Subset(train_dataset,
-                       list(set(random.sample(range(1, len(train_dataset)), int(0.11 * len(train_dataset)))))),
+                       list(set(random.sample(range(1, len(train_dataset)), int(0.05 * len(train_dataset)))))),
                 batch_size=self._batch_size,
                 collate_fn=train_dataset.collate_fn,
+                shuffle=True
             )
         # set validation loader
         if dev_dataset is not None:
@@ -64,15 +65,16 @@ class SNLIActivator:
         self._accuracy_vec_train = []
 
     def _validate_train_and_dev(self, epoch_num):
-        # validate Train
-        loss, accuracy = self._validate(self._train_validation_loader, job="Train")
-        self._loss_vec_train.append((epoch_num, loss))
-        self._accuracy_vec_train.append((epoch_num, accuracy))
-        # validate Dev
-        if self._dev_loader is not None:
-            loss, accuracy = self._validate(self._dev_loader, job="Dev")
-            self._loss_vec_dev.append((epoch_num, loss))
-            self._accuracy_vec_dev.append((epoch_num, accuracy))
+        with torch.no_grad():
+            # validate Train
+            loss, accuracy = self._validate(self._train_validation_loader, job="Train")
+            self._loss_vec_train.append((epoch_num, loss))
+            self._accuracy_vec_train.append((epoch_num, accuracy))
+            # validate Dev
+            if self._dev_loader is not None:
+                loss, accuracy = self._validate(self._dev_loader, job="Dev")
+                self._loss_vec_dev.append((epoch_num, loss))
+                self._accuracy_vec_dev.append((epoch_num, accuracy))
 
     def _to_variables(self, pw, pc, hw, hc, label):
         pw = Variable(pw).cuda() if self._gpu else Variable(pw)
@@ -119,6 +121,7 @@ class SNLIActivator:
                 if self._validation_rate and batch_index % self._validation_rate == 0:
                     logger.info("\nvalidating dev...    epoch:" + "\t" + str(epoch_num + 1) + "/" + str(self._epochs))
                     self._validate_train_and_dev(epoch_num + (batch_index / len_data))
+                    self._model.train()
 
     # validation function only the model and the data are important for input, the others are just for print
     def _validate(self, data_loader, job=""):

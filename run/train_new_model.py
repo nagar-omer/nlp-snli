@@ -1,4 +1,5 @@
 import sys
+sys.path.insert(0, "..")
 from bokeh.plotting import figure, save
 from bokeh.resources import Resources
 from utils.data_loader import SNLIDataset
@@ -69,8 +70,8 @@ if __name__ == "__main__":
     args = sys.argv
 
     # TODO DELETE
-    args = ["", "test_model", os.path.join("..", PRE_TRAINED_SRC), os.path.join("..", TRAIN_SRC),
-            os.path.join("..", DEV_SRC)]
+    # args = ["", "test_model", os.path.join("..", PRE_TRAINED_SRC), os.path.join("..", TRAIN_SRC),
+    #         os.path.join("..", DEV_SRC)]
 
     model_name_ = args[1]
     pre_trained_ = args[2]

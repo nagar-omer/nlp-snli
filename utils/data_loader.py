@@ -58,6 +58,7 @@ class SNLIDataset(Dataset):
             if label == "-":
                 continue
             data.append((premise.split(), hypothesis.split(), label))
+        # data = sorted(data, key=lambda x: len(x[0])**2 + len(x[1])**2)
         return data
 
     # read vocabulary + vectors from file (or from pkl if possible)

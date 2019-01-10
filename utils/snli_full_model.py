@@ -9,8 +9,8 @@ class SNLIModel(Module):
     def __init__(self, params: SNLIFullModelParams):
         super(SNLIModel, self).__init__()
         self._chr_embed_model = CharacterCnnEmbed(params.CHARACTER_params)                    # character embed (CNN)
-        self._premise_seq_model = SequenceEncoderModel(params.SEQUENSE_premise_params)        # premise to vec (LSTM)
-        self._hypothesis_seq_model = SequenceEncoderModel(params.SEQUENCE_hypothesis_params)  # hypothesis to vec (LSTM)
+        self._seq_model = SequenceEncoderModel(params.SEQUENSE_premise_params)                # premise to vec (LSTM)
+        # self._hypothesis_seq_model = SequenceEncoderModel(params.SEQUENCE_hypothesis_params)# hypothesis to vec (LSTM)
         self._top_layer_model = TopLayerModel(params.TOP_LAYAER_params)                       # combine with (NN)
         self.optimizer = self.set_optimizer(params.LEARNING_RATE, params.OPTIMIZER)
 
@@ -19,8 +19,8 @@ class SNLIModel(Module):
         return opt(self.parameters(), lr=lr)
 
     def forward(self, premise_words, premise_chr, hypothesis_words, hypothesis_chr):
-        premise_v = self._premise_seq_model(premise_words, self._chr_embed_model(premise_chr))
-        hypothesis_v = self._hypothesis_seq_model(hypothesis_words, self._chr_embed_model(hypothesis_chr))
+        premise_v = self._seq_model(premise_words, self._chr_embed_model(premise_chr))
+        hypothesis_v = self._seq_model(hypothesis_words, self._chr_embed_model(hypothesis_chr))
         return self._top_layer_model(premise_v, hypothesis_v)
 
 
